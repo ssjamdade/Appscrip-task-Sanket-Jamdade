@@ -1,12 +1,26 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Footer = () => {
   const [openSection, setOpenSection] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const toggleSection = (section) => {
-    setOpenSection(openSection === section ? null : section);
+    if (isMobile) {
+      setOpenSection(openSection === section ? null : section);
+    }
   };
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 800); 
+  };
+
+  useEffect(() => {
+
+    handleResize();
+    window.addEventListener('resize', handleResize); 
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <footer>
@@ -24,7 +38,6 @@ const Footer = () => {
           <div className="second">
             <h3 className='contactUs'>CONTACT US</h3>
             <div className="contact">
-
               <h5>+44 221 133 5360</h5>.<h5>customercare@mettamuse.com</h5>
             </div>
             <div className="border1 border"></div>
@@ -39,14 +52,13 @@ const Footer = () => {
         <div className="border"></div>
 
         <div className="lower">
-
           <div className="lowerFirst">
             <div className="left">
-              <div onClick={() => toggleSection("metta")} className="metta option ">
+              <div onClick={() => toggleSection("metta")} className="option metta">
                 <h3>mettā muse</h3>
                 <img src="/downarrow.svg" alt="Down arrow" />
               </div>
-              <div className={openSection === "metta" ? "" : "allhide"}>
+              <div className={openSection === "metta" || !isMobile ? "" : "allhide"}>
                 <h4>About Us</h4>
                 <h4>Stories</h4>
                 <h4>Artisans</h4>
@@ -59,12 +71,10 @@ const Footer = () => {
 
             <div className="lowerRight">
               <div onClick={() => toggleSection("quickLinks")} className="quickLinks option">
-
                 <h3>QUICK LINKS</h3>
                 <img src="/downarrow.svg" alt="Down arrow" />
               </div>
-              <div className={openSection === "quickLinks" ? "" : "allhide"}>
-
+              <div className={openSection === "quickLinks" || !isMobile ? "" : "allhide"}>
                 <h4>Orders & Shipping</h4>
                 <h4>Join/Login as a Seller</h4>
                 <h4>Payment & Pricing</h4>
@@ -72,21 +82,19 @@ const Footer = () => {
                 <h4>FAQs</h4>
                 <h4>Privacy Policy</h4>
                 <h4>Terms & Conditions</h4>
-
               </div>
             </div>
 
             <div className="border1 border"></div>
-
           </div>
+          
           <div className="second">
             <div className="follow">
               <div onClick={() => toggleSection("followUs")} className="followUs option">
                 <h3>FOLLOW US</h3>
                 <img src="/downarrow.svg" alt="Down arrow" />
               </div>
-              <div className={openSection === "followUs" ? "" : "allhide"}>
-
+              <div className={openSection === "followUs" || !isMobile ? "" : "allhide"}>
                 <img className='insta' src="/insta.svg" alt="Instagram" />
                 <img className='linkdin' src="/linkdin.svg" alt="Linkdin" />
               </div>
@@ -105,14 +113,13 @@ const Footer = () => {
             </div>
           </div>
         </div>
+        
         <div className="copyright">
           Copyright © 2023 mettamuse. All rights reserved.
         </div>
       </div>
     </footer>
+  );
+};
 
-  )
-}
-
-export default Footer
-
+export default Footer;

@@ -1,26 +1,45 @@
-"use client"
+"use client";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useRef, useState, useEffect } from "react";
 
-
 export default function Home() {
   const [isHide, setIsHide] = useState(false);
   const [openFilter, setOpenFilter] = useState(null);
-  const [openRecommend, setopenRecommend] = useState(true)
-  const [products, setproducts] = useState([])
+  const [openRecommend, setOpenRecommend] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const arrow = useRef();
-  const verticalarrow = useRef();
+  const recommendArrow = useRef();
+  const idealArrow = useRef();
+  const occasionArrow = useRef();
+  const workArrow = useRef();
+  const fabricArrow = useRef();
+  const segmentArrow = useRef();
+  const suitableForArrow = useRef();
+  const rawMaterialsArrow = useRef();
+  const patternArrow = useRef();
 
   useEffect(() => {
-    getData()
-  }, [])
+    getData(); 
+
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 800);
+    };
+
+    handleResize(); 
+    window.addEventListener("resize", handleResize); 
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); 
 
   const handleHide = () => {
-    setIsHide(!isHide)
-
+    setIsHide(!isHide);
     if (arrow.current.src.includes("rightarrow.svg")) {
       arrow.current.src = "/leftarrow.svg";
     } else {
@@ -28,20 +47,31 @@ export default function Home() {
     }
   };
 
-  const handleFilterToggle = (filterName) => {
-    setOpenFilter((prevfilter) => (prevfilter === filterName ? null : filterName));
+  const handleFilterToggle = (filterName, filterArrowRef) => {
+    if (filterArrowRef.current.src.includes("/downarrow.svg")) {
+      filterArrowRef.current.src = "/uparrow.svg";
+    } else {
+      filterArrowRef.current.src = "/downarrow.svg";
+    }
+
+    setOpenFilter((prevFilter) => (prevFilter === filterName ? null : filterName));
   };
 
   const handleRecommend = () => {
-    setopenRecommend(!openRecommend)
-  }
+    setOpenRecommend(!openRecommend);
+    if (recommendArrow.current.src.includes("/downarrow.svg")) {
+      recommendArrow.current.src = "/uparrow.svg";
+    } else {
+      recommendArrow.current.src = "/downarrow.svg";
+    }
+  };
 
   const getData = async () => {
-    let a = await fetch('https://fakestoreapi.com/products')
-    let r = await a.json()
-    setproducts(r)
-    console.log(r)
-  }
+    let response = await fetch('https://fakestoreapi.com/products');
+    let data = await response.json();
+    setProducts(data);
+    console.log(data);
+  };
 
   return (
     <>
@@ -56,11 +86,9 @@ export default function Home() {
           </p>
         </div>
         <section className="tab">
-          <div className="mobileFilter">
-            Filter
-          </div>
+          <div className="mobileFilter">Filter</div>
           <div className="options">
-            <h3>3245 ITEMS</h3>
+            <h3>{products.length} ITEMS</h3>
             <div className="hidefilter">
               <img ref={arrow} src="/leftarrow.svg" alt="Left arrow" />
               {isHide ? (
@@ -72,7 +100,7 @@ export default function Home() {
           </div>
           <div onClick={handleRecommend} className="recommended">
             <span>RECOMMENDED</span>
-            <img src="/downarrow.svg" alt="Down arrow" />
+            <img ref={recommendArrow} src="/downarrow.svg" alt="Down arrow" />
             <div className={openRecommend ? "hideRecommend" : "recommendedOpen"}>
               <span>RECOMMENDED</span>
               <span>NEWEST FIRST</span>
@@ -91,206 +119,14 @@ export default function Home() {
             </div>
             <div className="filterType">
               <div
-                onClick={() => handleFilterToggle("ideal")}
+                onClick={() => handleFilterToggle("ideal", idealArrow)}
                 className="ideals filter"
               >
                 <span>IDEAL FOR</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
+                <img ref={idealArrow} src="/downarrow.svg" alt="Down arrow" />
               </div>
               <span>All</span>
               <div className={openFilter === "ideal" ? "" : "allhide"}>
-                <div className="unselect">Unselect all</div>
-                <div className="checkbox">
-                  <li>
-                    <input type="checkbox" />
-                    <span>Men</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Women</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Baby & Kids</span>
-                  </li>
-                </div>
-              </div>
-            </div>
-
-            <div className="filterType">
-              <div
-                onClick={() => handleFilterToggle("occasion")}
-                className="occasion filter"
-              >
-                <span>OCCASION</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
-              </div>
-              <span>All</span>
-              <div className={openFilter === "occasion" ? "" : "allhide"}>
-                <div className="unselect">Unselect all</div>
-                <div className="checkbox">
-                  <li>
-                    <input type="checkbox" />
-                    <span>Men</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Women</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Baby & Kids</span>
-                  </li>
-                </div>
-              </div>
-            </div>
-
-            <div className="filterType">
-              <div
-                onClick={() => handleFilterToggle("work")}
-                className="work filter"
-              >
-                <span>WORK</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
-              </div>
-              <span>All</span>
-              <div className={openFilter === "work" ? "" : "allhide"}>
-                <div className="unselect">Unselect all</div>
-                <div className="checkbox">
-                  <li>
-                    <input type="checkbox" />
-                    <span>Men</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Women</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Baby & Kids</span>
-                  </li>
-                </div>
-              </div>
-            </div>
-
-            <div className="filterType">
-              <div
-                onClick={() => handleFilterToggle("fabric")}
-                className="fabric filter"
-              >
-                <span>FABRIC</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
-              </div>
-              <span>All</span>
-              <div className={openFilter === "fabric" ? "" : "allhide"}>
-                <div className="unselect">Unselect all</div>
-                <div className="checkbox">
-                  <li>
-                    <input type="checkbox" />
-                    <span>Men</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Women</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Baby & Kids</span>
-                  </li>
-                </div>
-              </div>
-            </div>
-            <div className="filterType">
-              <div
-                onClick={() => handleFilterToggle("segment")}
-                className="segment filter"
-              >
-                <span>SEGMENT</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
-              </div>
-              <span>All</span>
-              <div className={openFilter === "segment" ? "" : "allhide"}>
-                <div className="unselect">Unselect all</div>
-                <div className="checkbox">
-                  <li>
-                    <input type="checkbox" />
-                    <span>Men</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Women</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Baby & Kids</span>
-                  </li>
-                </div>
-              </div>
-            </div>
-            <div className="filterType">
-              <div
-                onClick={() => handleFilterToggle("suitableFor")}
-                className="suitableFor filter"
-              >
-                <span>SUITABLE FOR</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
-              </div>
-              <span>All</span>
-              <div className={openFilter === "suitableFor" ? "" : "allhide"}>
-                <div className="unselect">Unselect all</div>
-                <div className="checkbox">
-                  <li>
-                    <input type="checkbox" />
-                    <span>Men</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Women</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Baby & Kids</span>
-                  </li>
-                </div>
-              </div>
-            </div>
-            <div className="filterType">
-              <div
-                onClick={() => handleFilterToggle("rawMaterials")}
-                className="rawMaterials filter"
-              >
-                <span>RAW MATERIALS</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
-              </div>
-              <span>All</span>
-              <div className={openFilter === "rawMaterials" ? "" : "allhide"}>
-                <div className="unselect">Unselect all</div>
-                <div className="checkbox">
-                  <li>
-                    <input type="checkbox" />
-                    <span>Men</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Women</span>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <span>Baby & Kids</span>
-                  </li>
-                </div>
-              </div>
-            </div>
-            <div className="filterType">
-              <div
-                onClick={() => handleFilterToggle("pattern")}
-                className="pattern filter"
-              >
-                <span>PATTERN</span>
-                <img ref={verticalarrow} src="/downarrow.svg" alt="Down arrow" />
-              </div>
-              <span>All</span>
-              <div className={openFilter === "pattern" ? "" : "allhide"}>
                 <div className="unselect">Unselect all</div>
                 <div className="checkbox">
                   <li>
@@ -313,24 +149,20 @@ export default function Home() {
 
           <div className={isHide ? "fullContent" : "content"}>
             <div className="items">
-
-              {products.map((item) => {
-
-                return <article className="item" key={item.id}>
-                  <img className="image" src={item.image} alt="Bag image" />
-
+              {products.map((item) => (
+                <article className="item" key={item.id}>
+                  <img className="image" src={item.image} alt="Product image" />
                   <h3>{item.title}</h3>
-                  <p>{item.description.slice(0, 35)}</p>
+                  <p>{item.description.slice(0, 35)}...</p>
                   <div className="para">
-
-                    <p> <span>Price:</span> {item.price}$</p>
+                    <p>
+                      {" "}
+                      <span>Price:</span> {item.price}$
+                    </p>
                     <img src="/heart.svg" alt="Like" />
                   </div>
-
                 </article>
-
-              })}
-
+              ))}
             </div>
           </div>
         </main>
