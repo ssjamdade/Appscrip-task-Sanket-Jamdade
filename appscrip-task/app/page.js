@@ -6,7 +6,7 @@ import { useRef, useState, useEffect } from "react";
 
 export default function Home() {
   const [isHide, setIsHide] = useState(false);
-  const [openFilter, setOpenFilter] = useState(null);  // Keep track of open filter
+  const [openFilter, setOpenFilter] = useState(null); 
   const [openRecommend, setOpenRecommend] = useState(true);
   const [products, setProducts] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
